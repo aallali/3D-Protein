@@ -1,4 +1,4 @@
-<iframe src="https://giphy.com/embed/TFOU670rpPHiVIZJNJ" width="480" height="480" frameBorder="1" style="border-radius:20px;" class="giphy-embed" allowFullScreen></iframe>
+<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdmg2MnR5Ym10OGkwNTIwdzJkc2dzbXI1NjM2MmtuMGM5eXV3M3A1aSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TFOU670rpPHiVIZJNJ/giphy.gif" width="480" height="480" style="border-radius:20px;"/>
 
 ---
 # 3D Protein
