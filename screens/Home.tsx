@@ -1,18 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import Listing from './screens/Listing';
-import Render from './screens/Render';
-import Home from './screens/Home';
-import Splash from './screens/Splash';
 
-export default function App() {
+export default function Home() {
   return (
     <View style={styles.container}>
-      <Text>3D Protein</Text>
-      <Home />
-      <Splash />
-      <Listing />
-      <Render />
+      <Text>Home Page</Text>
       <StatusBar style="auto" />
     </View>
   );

@@ -1,18 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import Listing from './screens/Listing';
-import Render from './screens/Render';
-import Home from './screens/Home';
-import Splash from './screens/Splash';
+import ligands from "../const/ligands.json"
 
-export default function App() {
+export default function Listing() {
   return (
     <View style={styles.container}>
-      <Text>3D Protein</Text>
-      <Home />
-      <Splash />
-      <Listing />
-      <Render />
+      <Text>Ligands List Page</Text>
+      <Text>Total Ligands we have : {ligands.length}</Text>
       <StatusBar style="auto" />
     </View>
   );
