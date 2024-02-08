@@ -1,20 +1,36 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
 
-export default function Splash() {
+import { View, Image, StyleSheet } from 'react-native';
+
+const Splash = ({ navigation }) => {
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // Redirect to the home screen
+      navigation.replace('Home'); // Make sure 'Home' is the correct screen name
+    }, 3000); // 3000 milliseconds = 3 seconds
+
+    return () => clearTimeout(timer); // Clear the timer when the component unmounts
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
-      <Text>Splash Page</Text>
-      <StatusBar style="auto" />
+      {  <Image source={require('../assets/proteinLogo.png')} style={styles.logo} />}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  logo: {
+    width: 200, // Adjust the width as needed
+    height: 200, // Adjust the height as needed
+  },
 });
+
+export default Splash;
