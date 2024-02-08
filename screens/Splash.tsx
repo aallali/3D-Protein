@@ -1,20 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { ImageBackground, View } from 'react-native';
 
-export default function Splash() {
-  return (
-    <View style={styles.container}>
-      <Text>Splash Page</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+export default function Splash({
+    goHomeScreen,
+  }: {
+    goHomeScreen: React.Dispatch<React.SetStateAction<boolean>>;
+  }) {
+    useEffect(() => {
+        setTimeout(() => {
+            goHomeScreen(true)
+        }, 2000)
+    }, [])
+    return (
+        <View style={{ flex: 1 }}>
+            <ImageBackground
+                style={{
+                    flex: 1,
+                    backgroundColor: "black",
+                }}
+                source={require("../assets/splash.png")}
+                resizeMode="contain"
+            />
+        </View>
+    );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
