@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, TextInput } from 'react-native';
-import ligands from "../const/ligands.json"
+import ligands from "../constants/ligands.json"
 import { useEffect, useState } from 'react';
 
 export default function Listing(props: any) {
