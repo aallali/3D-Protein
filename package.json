@@ -8,13 +8,16 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "login": "expo login"
-
   },
   "dependencies": {
+    "@react-navigation/native": "^6.1.9",
+    "@react-navigation/native-stack": "^6.9.18",
+    "@react-navigation/stack": "^6.3.20",
     "expo": "~50.0.6",
     "expo-status-bar": "~1.11.1",
     "react": "18.2.0",
-    "react-native": "0.73.4"
+    "react-native": "0.73.4",
+    "react-native-screens": "~3.29.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
