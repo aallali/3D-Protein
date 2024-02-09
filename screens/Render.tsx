@@ -17,15 +17,10 @@ export default function Render() {
   useEffect(() => {
     setLoader(true);
 
-    fetchProteinModel(ligand).finally(() => {
-      setTimeout(() => {
-        setLoader(false);
-      }, 1000)
-    }).then((data: any) => {
-      setPDB(data)
-    }).catch((err: any) => {
-      setError(err.message || err)
-    })
+    fetchProteinModel(ligand)
+      .then((data: any) => setPDB(data))
+      .catch((err: any) => setError(err.message || err))
+      .finally(() => setLoader(false))
   }, [])
 
   return (
