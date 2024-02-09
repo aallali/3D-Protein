@@ -32,8 +32,8 @@ export default function Render() {
     <View style={styles.container}>
 
       <IsReadyPDB ligand={ligand} loader={loading} loadError={loadError}>
- 
-        <ProtScene />
+
+        <ProtScene data={pdb} />
         <Text>Received: {ligand}</Text>
 
       </IsReadyPDB>

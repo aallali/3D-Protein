@@ -1,3 +1,6 @@
+//@ts-ignore
+import pdbParser from "parse-pdb";
+
 
 const PROTEIN_MODEL_API = (ligand: string) => `https://files.rcsb.org/ligands/${ligand[0]}/${ligand}/${ligand}_model.pdb`;
 
@@ -12,13 +15,13 @@ export function fetchProteinModel(ligand: string) {
           throw `cannot load this ligand's model, please try again or check official website status: ${pdbUrl}`
         }
         const data = await resp.text();
-        console.log(data)
-        const pdbObj = { atoms: [] }
+        const pdbObj = pdbParser(data)
         const atoms = pdbObj.atoms
   
         let connectors = data.match(/^CONECT(:?\s*\d+.+)+/gm)?.map(l => [...l.match(/(:?\d+s*)/gm) || []].map(l => parseFloat(l)));
   
-        resolve({ atoms: [], connectors: [] })
+        resolve({ atoms, connectors })
+
       } catch (error) {
         console.log(error)
         reject(error)
