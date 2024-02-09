@@ -1,10 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import ligands from "../const/ligands.json"
-
-import { TouchableOpacity, FlatList } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, TextInput } from 'react-native';
+import ligands from '../const/ligands.json';
 
 export default function Home({ navigation }) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredLigands, setFilteredLigands] = useState([]);
+
+  useEffect(() => {
+    // Update the filtered ligands whenever the searchQuery changes
+    const filtered = ligands.filter((ligand) =>
+      ligand.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredLigands(filtered);
+  }, [searchQuery]);
+
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.button}
@@ -16,13 +25,19 @@ export default function Home({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search Ligands"
+        value={searchQuery}
+        onChangeText={(text) => setSearchQuery(text)}
+      />
+
       <FlatList
-        key={3}
-        data={ligands}
+        data={filteredLigands}
         renderItem={renderItem}
         keyExtractor={(item) => item}
-        numColumns={5} // Set the number of columns as per your requirement
-        columnWrapperStyle={styles.row} // Style for each row
+        numColumns={5}
+        columnWrapperStyle={styles.row}
       />
     </View>
   );
@@ -34,14 +49,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  searchInput: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    width: '80%',
+    
+  },
   row: {
     justifyContent: 'space-around',
   },
   button: {
     backgroundColor: '#3498db',
     padding: 10,
-    margin: 10, // Increase margin to create a gap
-    width:60,
+    margin: 10,
+    width: 60,
     borderRadius: 5,
     alignItems: 'center',
   },

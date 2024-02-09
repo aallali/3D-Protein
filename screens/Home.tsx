@@ -12,7 +12,6 @@ export default function Home() {
 
   const checkBiometricAvailability = async () => {
     const isAvailable = await LocalAuthentication.hasHardwareAsync();
-    
     console.log(isAvailable)
     setIsBiometricAvailable(isAvailable);
   };
