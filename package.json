@@ -10,18 +10,15 @@
     "login": "expo login"
   },
   "dependencies": {
-    "@expo/metro-runtime": "^3.1.3",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.18",
     "@react-navigation/stack": "^6.3.20",
     "expo": "~50.0.6",
     "expo-status-bar": "~1.11.1",
     "react": "18.2.0",
-    "react-dom": "^18.2.0",
     "react-native": "0.73.4",
     "react-native-orientation-loading-overlay": "^0.1.6",
-    "react-native-screens": "~3.29.0",
-    "react-native-web": "^0.19.10"
+    "react-native-screens": "~3.29.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
