@@ -9,7 +9,7 @@
 - [x] list ligands from [./constants/ligands.json](./constants/ligands.json)
 - [x] search bar to search a specefic ligand from list
 - [x] if a ligand is selected (clicked) move to render page
-- [ ] setup Three.js in the app
+- [x] setup Three.js in the app
 - [ ] render in 3d the structure of protein by fetching the PDB data by ligand
     - [x] fetch ligand PDB data from api
     - [ ] parse it

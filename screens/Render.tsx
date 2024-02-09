@@ -1,9 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import IsReadyPDB from '../components/IsPdbReady';
 import { fetchProteinModel } from '../utils/api';
+import ProtScene from '../components/Scene';
 
 
 export default function Render() {
@@ -12,7 +12,7 @@ export default function Render() {
   const [pdb, setPDB] = useState<{ atoms: [], connectors: [] }>()
   const [loadError, setError] = useState(undefined)
 
-  const { item: ligand } = route.params as { item: string };
+  const { item: ligand } = route.params as { item: string } || { item: "SPM" };
 
   useEffect(() => {
     setLoader(true);
@@ -26,15 +26,18 @@ export default function Render() {
     }).catch((err: any) => {
       setError(err.message || err)
     })
-
   }, [])
 
   return (
     <View style={styles.container}>
+
       <IsReadyPDB ligand={ligand} loader={loading} loadError={loadError}>
-        <Text>Render Page</Text>
-        <Text>Receive {ligand}</Text>
+ 
+        <ProtScene />
+        <Text>Received: {ligand}</Text>
+
       </IsReadyPDB>
+
     </View>
   );
 }
