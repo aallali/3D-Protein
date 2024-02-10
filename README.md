@@ -12,7 +12,7 @@
 - [x] setup Three.js in the app
 - [ ] render in 3d the structure of protein by fetching the PDB data by ligand
     - [x] fetch ligand PDB data from api
-    - [ ] parse it
+    - [x] parse it
     - [ ] render
 - [ ] build `kind of` an engine to render parser Pdb data
 
