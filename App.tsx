@@ -35,19 +35,19 @@ function NavigateButtons(props: any) {
 
 export default function App() {
   const [appLoaded, isLoaded] = useState(false)
+  const [biometricSupported, setBiometric ] = useState(false) 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar backgroundColor="#00C4FF" hidden={false} />
       {
         !appLoaded ?
-          (<Splash goHomeScreen={isLoaded} />)
+          (<Splash goHomeScreen={isLoaded} setBiometric={setBiometric} />)
           :
           (
             <NavigationContainer>
               <Stack.Navigator
-                initialRouteName="ligands"
+                initialRouteName={`${biometricSupported ? "home" : "listing" }`}
                 screenOptions={{ headerShown: true }}
-
               >
                 <Stack.Screen name="home" component={Home} />
                 <Stack.Screen name="listing" component={Listing} />
