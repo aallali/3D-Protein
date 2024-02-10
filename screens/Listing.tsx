@@ -8,7 +8,7 @@ export default function Listing(props: any) {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    if (search == "") return
+    if (search == "") setData(ligands);
     else {
       const targetLigands = ligands.filter((element) =>
         element.includes(search.toUpperCase())
