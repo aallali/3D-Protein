@@ -7,7 +7,6 @@ export function fetchProteinModel(ligand: string) {
         const pdbUrl = PROTEIN_MODEL_API(ligand)
         console.log(pdbUrl)
         const resp = await fetch(pdbUrl);
-   
         if (resp.status !== 200) {
           throw `cannot load this ligand's model, please try again or check official website status: ${pdbUrl}`
         }
