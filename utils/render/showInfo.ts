@@ -21,7 +21,6 @@ export default  function onAtomClick(event:any, camera:any, scene: any) {
         const clickedObject = intersects[0].object;
         if (clickedObject.name) {
             const info = colors[clickedObject.name]
-            console.log('atom clicked!', info);
         }
     }
 }
