@@ -20,8 +20,6 @@ import {
 } from '../utils/render_controls';
 
 
-let molecule = null
-
 
 export default function ProtScene({ data }: any) {
 
