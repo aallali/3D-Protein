@@ -22,7 +22,8 @@
     "react-native": "0.73.4",
     "react-native-orientation-loading-overlay": "^0.1.6",
     "react-native-screens": "~3.29.0",
-    "three": "^0.161.0"
+    "three": "^0.161.0",
+    "expo-local-authentication": "~13.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
