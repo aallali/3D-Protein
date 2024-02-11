@@ -36,7 +36,10 @@ export default function Home({ navigation }: any) {
 
     return (
         <View style={styles.container}>
-            <Text>Home Page</Text>
+            <Text style={styles.message}>
+                Please authenticate yourself in order to use the application.
+                Thank you
+            </Text>
             <Button title="Authenticate" onPress={authenticateWithFingerprint} />
         </View>
     );
@@ -49,4 +52,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    message: {
+        fontSize: 25,
+        marginHorizontal: 10,
+        marginBottom: 20,
+        textAlign: 'center',
+        // fontWeight: 'bold'
+    }
 });
