@@ -24,8 +24,8 @@ there will be 4 screens (pages):
 3. Render screen 
 
 <div style="display: flex;">
-    <img src="./assets/screenshot-splash.jpeg" alt="First Screenshot" style="width: 24%; padding: 10px;">
-    <img src="./assets/screenshot-home.jpeg" alt="First Screenshot" style="width: 24%; padding: 10px;">
-    <img src="./assets/screenshot-listing.jpeg" alt="First Screenshot" style="width: 24%; padding: 10px;">
-    <img src="./assets/screenshot-render.gif" alt="First Screenshot" style="width: 24%; padding: 10px;">
+    <img src="./assets/screenshot-splash.jpeg" alt="splash" width="240" height="500">
+    <img src="./assets/screenshot-home.jpeg" alt="home" width="240" height="500">
+    <img src="./assets/screenshot-listing.jpeg" alt="listing" swidth="240" height="500">
+    <img src="./assets/screenshot-render.gif" alt="render" width="240" height="500">
 </div>
