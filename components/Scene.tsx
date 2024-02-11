@@ -1,5 +1,5 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useRef } from 'react';
+import { View, StyleSheet, Text } from 'react-native';
 import { GLView, ExpoWebGLRenderingContext } from 'expo-gl';
 import { Renderer } from 'expo-three';
 //@ts-ignore
@@ -25,30 +25,24 @@ let molecule = null
 
 export default function ProtScene({ data }: any) {
 
-    if (!data)
-        return
-    // data.connectors.forEach(el => console.log(el))
+    const camera = useRef();
+    const scene = useRef();
+    const molecule = useRef();
+
     const onContextCreate = async (gl: ExpoWebGLRenderingContext) => {
-        const scene = new THREE.Scene();
+        scene.current = new THREE.Scene();
 
         // Molecule
-        const molecule = createMolecule(data.atoms, data.connectors)
-        scene.add(molecule);
+        molecule.current = createMolecule(data.atoms, data.connectors)
+        scene.current.add(molecule.current);
 
         // Camera
-        const camera = createCamera(gl)
-        scene.add(camera)
+        camera.current = createCamera(gl)
+        scene.current.add(camera.current)
 
         // Light
         const light = createLight()
-        scene.add(light);
-
-        //  Y Axis : cylinder to represent Y Axis
-        const geometry = new THREE.CylinderGeometry(.1, .1, 32);
-        const material = new THREE.MeshStandardMaterial({ color: 0xffff00 });
-        const cylinder = new THREE.Mesh(geometry, material); scene.add(cylinder);
-        cylinder.position.set(0, 0, 0)
-        // scene.add(cylinder)
+        scene.current.add(light);
 
         // Renderer
         const renderer = new Renderer({ gl });
@@ -56,9 +50,9 @@ export default function ProtScene({ data }: any) {
 
         const animate = () => {
             requestAnimationFrame(animate);
-            renderer.render(scene, camera);
+            renderer.render(scene.current, camera.current);
             // rotate horizontally
-            molecule.rotation.y += 10
+
 
             gl.endFrameEXP();
         }
@@ -102,6 +96,7 @@ export default function ProtScene({ data }: any) {
         </View>
     );
 }
+
 const styles = StyleSheet.create({
     sectionTitle: {
         fontWeight: "bold"
