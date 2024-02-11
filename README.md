@@ -14,7 +14,7 @@
     - [x] fetch ligand PDB data from API
     - [x] parse it
     - [x] render
-    - [x] cache PDB data in phone's local storage
+    - [ ] cache PDB data in the phone's local storage
 - [ ] add utility to handle protein:
     - [x] zoom
     - [x] rotate
