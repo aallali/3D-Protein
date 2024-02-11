@@ -7,7 +7,12 @@ export default function Home({ navigation }) {
 
     const authenticateWithFingerprint = async () => {
         try {
-            const supported = await LocalAuthentication.hasHardwareAsync() && await LocalAuthentication.isEnrolledAsync();
+            // check if an authentication system is enable in this device
+            const supported = await Promise.all([
+                LocalAuthentication.hasHardwareAsync(),
+                LocalAuthentication.isEnrolledAsync()
+            ])
+
             if (supported) {
                 const result = await LocalAuthentication.authenticateAsync({
                     promptMessage: 'Authenticate with your fingerprint',
