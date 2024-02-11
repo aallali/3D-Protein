@@ -32,11 +32,13 @@ export default function createMolecule(atoms: TAtoms, connectors: TConnectors) {
     const molecule = new THREE.Group();
     // Calculate the center of the group of spheres
     const groupCenter = calculateGroupCenter(atoms);
+
     atoms.forEach((ato) => {
         const atom = createAtom(ato)
         atom.position.sub(groupCenter);
         molecule.add(atom);
     })
+
     connectors.forEach(c => {
         let atomAPos = new THREE.Vector3(
             atoms[c[0] - 1].x,
