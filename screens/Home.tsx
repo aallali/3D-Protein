@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, Alert } from 'react-native';
 import * as LocalAuthentication from 'expo-local-authentication';
 
-export default function Home({ navigation }) {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+export default function Home({ navigation }: any) {
 
     const authenticateWithFingerprint = async () => {
         try {
@@ -19,7 +18,6 @@ export default function Home({ navigation }) {
                 });
                 if (result.success) {
                     // Fingerprint authentication successful
-                    setIsAuthenticated(true);
                     navigation.navigate('listing');
                 } else {
                     // Fingerprint authentication failed
