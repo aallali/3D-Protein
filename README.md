@@ -7,14 +7,25 @@
 - [x] add splash screen with custom logo
 - [ ] add FingerPrint authentication.
 - [x] list ligands from [./constants/ligands.json](./constants/ligands.json)
-- [x] search bar to search a specefic ligand from list
-- [x] if a ligand is selected (clicked) move to render page
+- [x] search bar to search a specific ligand from the list
+- [x] if a ligand is selected (clicked) move to the render page
 - [x] setup Three.js in the app
-- [ ] render in 3d the structure of protein by fetching the PDB data by ligand
-    - [x] fetch ligand PDB data from api
+- [x] render in 3d the structure of a protein by fetching the PDB data by ligand
+    - [x] fetch ligand PDB data from API
     - [x] parse it
-    - [ ] render
-- [ ] build `kind of` an engine to render parser Pdb data
+    - [x] render
+    - [x] cache PDB data in phone's local storage
+- [ ] add utility to handle protein:
+    - [x] zoom
+    - [x] rotate
+    - [ ] screenshot + share
+    - [ ] model customization
+        - [ ] update cylinder (shape + color)
+        - [ ] update Atom (shape + color + 2d version)
+        - [ ] unify color
+    - [ ] reset settings
+- cache PDB locally
+- [ ] build a `kind of` engine to render a protein from PDB.
 
 ### Conclusion:
 there will be 4 screens (pages):
@@ -26,6 +37,6 @@ there will be 4 screens (pages):
 <div style="display: flex;">
     <img src="./assets/screenshot-splash.jpeg" alt="splash" width="240" height="500">
     <img src="./assets/screenshot-home.jpeg" alt="home" width="240" height="500">
-    <img src="./assets/screenshot-listing.jpeg" alt="listing" swidth="240" height="500">
-    <img src="./assets/screenshot-render.gif" alt="render" width="240" height="500">
+    <img src="./assets/screenshot-listing.jpeg" alt="listing" width="240" height="500">
+    <img src="./assets/screenshot-render-2.gif" alt="render" width="240" height="500">
 </div>
