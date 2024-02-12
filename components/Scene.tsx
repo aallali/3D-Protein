@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, StyleSheet, Text, TouchableWithoutFeedback } from 'react-native';
 import { GLView, ExpoWebGLRenderingContext } from 'expo-gl';
 import { Renderer } from 'expo-three';
 //@ts-ignore
@@ -26,9 +26,17 @@ export default function ProtScene({ data }: any) {
     const camera = useRef();
     const scene = useRef();
     const molecule = useRef();
+    // the width and height of the WebGL canvas
+    const [glWidth, setGLWidth] = useState(0);
+    const [glHeight, setGLHeight] = useState(0);
+    const [selectedObject, setSelectedObject] = useState<string | null>(null);
 
     const onContextCreate = async (gl: ExpoWebGLRenderingContext) => {
         scene.current = new THREE.Scene();
+
+        // set width and height of the WebGL canvas
+        setGLWidth(gl.drawingBufferWidth);
+        setGLHeight(gl.drawingBufferHeight);
 
         // Molecule
         molecule.current = createMolecule(data.atoms, data.connectors)
@@ -57,12 +65,49 @@ export default function ProtScene({ data }: any) {
         animate();
     }
 
+    // InfoBox component for displaying object information
+    const InfoBox = ({ objectType }) => (
+        <View style={styles.infoBox}>
+            <Text>Object: {objectType}</Text>
+        </View>
+    );
+
+    const handleTouch = (event: any) => {
+        const { pageX, pageY } = event.nativeEvent;
+        const x = pageX / glWidth * 2 - 1;
+        const y = -(pageY / glHeight) * 2 + 1;
+
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera({ x, y }, camera.current);
+
+        console.log('scene ', glWidth, glHeight)
+
+        const intersects = raycaster.intersectObjects(scene.current.children, true);
+        console.log('intersects', intersects)
+
+        // Check if any objects were intersected
+        if (intersects.length > 0) {
+            const intersectedObject = intersects[0].object;
+            // Handle click on intersected object
+            setSelectedObject('Sphere');
+
+            console.log('Object clicked:', intersectedObject);
+        }
+        console.log('hi', x, y)
+    }
+
     return (
         <View style={{ flex: 1, paddingTop: 10 }}>
-            <GLView
-                style={{ width: '100%', aspectRatio: 1, backgroundColor: "black" }}
-                onContextCreate={onContextCreate}
-            />
+
+            <TouchableWithoutFeedback onPress={handleTouch}>
+                <GLView
+                    style={{ width: '100%', aspectRatio: 1, backgroundColor: "black" }}
+
+                    onContextCreate={onContextCreate}
+                />
+            </TouchableWithoutFeedback>
+            {selectedObject && <InfoBox objectType={selectedObject} />}
+
             <View style={{ margin: 10 }}>
                 <Text style={styles.sectionTitle}>Rotate the molecule (Horizontal/Vertical):</Text>
                 <View style={{ flexDirection: "row", marginBottom: 5, gap: 4 }}>
@@ -107,5 +152,15 @@ const styles = StyleSheet.create({
     },
     touchContainer: {
         ...StyleSheet.absoluteFillObject,
+    },
+    infoBox: {
+        position: 'absolute',
+        top: 20,
+        right: 10,
+        backgroundColor: 'white',
+        padding: 10,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: 'gray',
     },
 });
