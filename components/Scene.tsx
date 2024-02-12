@@ -3,12 +3,9 @@ import { View, StyleSheet, Text, TouchableWithoutFeedback } from 'react-native';
 import { GLView, ExpoWebGLRenderingContext } from 'expo-gl';
 import { Renderer } from 'expo-three';
 import { Dimensions } from 'react-native';
-
 //@ts-ignore
 import * as THREE from "three";
-import createMolecule from '../utils/render/createMolecule';
-import createCamera from '../utils/render/createCamera';
-import createLight from '../utils/render/createLight';
+import { createMolecule, createCamera, createLight } from "../utils/render"
 import Button from "../components/Button";
 import {
     reset_settings,
@@ -21,14 +18,16 @@ import {
     zoom
 } from '../utils/render_controls';
 import InfoBox from './AtomInfo';
-
+import Vif from './Vif';
 
 
 export default function ProtScene({ data }: any) {
 
-    const camera = useRef();
-    const scene = useRef();
-    const molecule = useRef();
+    // init ThreeJs instances
+    const camera = useRef<THREE.camera>();
+    const scene = useRef<THREE.scene>();
+    const molecule = useRef<THREE.Group>();
+
     // the width and height of the WebGL canvas
     const [glWidth, setGLWidth] = useState(0);
     const [glHeight, setGLHeight] = useState(0);
@@ -56,15 +55,13 @@ export default function ProtScene({ data }: any) {
         scene.current.add(light);
 
         // Renderer
-        const renderer = new Renderer({ gl });
+        const renderer: THREE.WebGLRenderer = new Renderer({ gl });
         renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
-        
+
         const animate = () => {
             requestAnimationFrame(animate);
             renderer.render(scene.current, camera.current);
             // rotate horizontally
-
-
             gl.endFrameEXP();
         }
         animate();
@@ -89,11 +86,12 @@ export default function ProtScene({ data }: any) {
         const intersects = raycaster.intersectObjects(scene.current.children, true);
 
         // Check if any objects were intersected
-        if (intersects.length > 0) {
-            const intersectedObject = intersects[0].object;
-            if (intersectedObject.name)
-                setSelectedObject(intersectedObject.name);
-            console.log(intersectedObject.name)
+        if (
+            intersects.length > 0 &&
+            intersects[0].object &&
+            intersects[0].object.name
+        ) {
+            setSelectedObject(intersects[0].object.name);
         } else {
             setSelectedObject(null);
         }
@@ -105,11 +103,13 @@ export default function ProtScene({ data }: any) {
             <TouchableWithoutFeedback onPress={handleTouch}>
                 <GLView
                     style={{ width: '100%', aspectRatio: 1, backgroundColor: "black" }}
-
                     onContextCreate={onContextCreate}
                 />
             </TouchableWithoutFeedback>
-            {selectedObject && <InfoBox atom={selectedObject} />}
+            <Vif c={!!selectedObject}>
+                <InfoBox atom={selectedObject as string} />
+            </Vif>
+
 
             <View style={{ margin: 10 }}>
                 <Text style={styles.sectionTitle}>Rotate the molecule (Horizontal/Vertical):</Text>
@@ -156,5 +156,5 @@ const styles = StyleSheet.create({
     touchContainer: {
         ...StyleSheet.absoluteFillObject,
     },
-  
+
 });
