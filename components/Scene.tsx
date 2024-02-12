@@ -2,6 +2,8 @@ import React, { useRef, useState } from 'react';
 import { View, StyleSheet, Text, TouchableWithoutFeedback } from 'react-native';
 import { GLView, ExpoWebGLRenderingContext } from 'expo-gl';
 import { Renderer } from 'expo-three';
+import { Dimensions } from 'react-native';
+
 //@ts-ignore
 import * as THREE from "three";
 import createMolecule from '../utils/render/createMolecule';
@@ -18,6 +20,7 @@ import {
     update_cylinder_shape,
     zoom
 } from '../utils/render_controls';
+import InfoBox from './AtomInfo';
 
 
 
@@ -30,6 +33,8 @@ export default function ProtScene({ data }: any) {
     const [glWidth, setGLWidth] = useState(0);
     const [glHeight, setGLHeight] = useState(0);
     const [selectedObject, setSelectedObject] = useState<string | null>(null);
+    // mobile screen size
+    const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
     const onContextCreate = async (gl: ExpoWebGLRenderingContext) => {
         scene.current = new THREE.Scene();
@@ -53,7 +58,7 @@ export default function ProtScene({ data }: any) {
         // Renderer
         const renderer = new Renderer({ gl });
         renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
-
+        console.log('renderer', renderer.domElement)
         const animate = () => {
             requestAnimationFrame(animate);
             renderer.render(scene.current, camera.current);
@@ -65,36 +70,43 @@ export default function ProtScene({ data }: any) {
         animate();
     }
 
-    // InfoBox component for displaying object information
-    const InfoBox = ({ objectType }) => (
-        <View style={styles.infoBox}>
-            <Text>Object: {objectType}</Text>
-        </View>
-    );
 
     const handleTouch = (event: any) => {
-        const { pageX, pageY } = event.nativeEvent;
-        const x = pageX / glWidth * 2 - 1;
-        const y = -(pageY / glHeight) * 2 + 1;
+        // offset of the mouse click position relative to the actual scene, not the entire screen
+        const { offsetX, offsetY } = event.nativeEvent;
+
+        // Map touch event coordinates to WebGL canvas size
+        const canvasX = (offsetX / screenWidth) * glWidth;
+        const canvasY = (offsetY / screenWidth) * glHeight;
+
+        // Normalize the mapped coordinates
+        const x = (canvasX / glWidth) * 2 - 1;
+        const y = -(canvasY / glHeight) * 2 + 1;
 
         const raycaster = new THREE.Raycaster();
         raycaster.setFromCamera({ x, y }, camera.current);
 
-        console.log('scene ', glWidth, glHeight)
-
         const intersects = raycaster.intersectObjects(scene.current.children, true);
-        console.log('intersects', intersects)
 
+
+        // console.log('screen               ', screenWidth, screenWidth)
+
+        // console.log('gl                   ', glWidth, glHeight)
+        // console.log('page click           ', offsetX, offsetY)
+        // console.log('mobile click mapped  ', canvasX, canvasY)
+
+        // console.log('normalized           ', x, y)
+        // console.log( event.nativeEvent)
         // Check if any objects were intersected
         if (intersects.length > 0) {
             const intersectedObject = intersects[0].object;
-            // Handle click on intersected object
-            setSelectedObject('Sphere');
-
-            console.log('Object clicked:', intersectedObject);
+            if (intersectedObject.name)
+                setSelectedObject(intersectedObject.name);
+            console.log(intersectedObject.name)
+        } else {
+            setSelectedObject(null);
         }
-        console.log('hi', x, y)
-    }
+    };
 
     return (
         <View style={{ flex: 1, paddingTop: 10 }}>
@@ -106,7 +118,7 @@ export default function ProtScene({ data }: any) {
                     onContextCreate={onContextCreate}
                 />
             </TouchableWithoutFeedback>
-            {selectedObject && <InfoBox objectType={selectedObject} />}
+            {selectedObject && <InfoBox atom={selectedObject} />}
 
             <View style={{ margin: 10 }}>
                 <Text style={styles.sectionTitle}>Rotate the molecule (Horizontal/Vertical):</Text>
@@ -153,14 +165,5 @@ const styles = StyleSheet.create({
     touchContainer: {
         ...StyleSheet.absoluteFillObject,
     },
-    infoBox: {
-        position: 'absolute',
-        top: 20,
-        right: 10,
-        backgroundColor: 'white',
-        padding: 10,
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: 'gray',
-    },
+  
 });
