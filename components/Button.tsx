@@ -15,9 +15,10 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     button: {
-        padding: 5,
+        paddingHorizontal: 10,
+        paddingVertical: 7,
         backgroundColor: "gray",
-        borderRadius: 4,
+        borderRadius: 2,
         justifyContent: "center",
         alignItems: "center",
     },

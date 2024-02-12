@@ -5,7 +5,7 @@
 
 ### Todo:
 - [x] add splash screen with custom logo
-- [ ] add FingerPrint authentication.
+- [x] add FingerPrint authentication (_if exists_).
 - [x] list ligands from [./constants/ligands.json](./constants/ligands.json)
 - [x] search bar to search a specific ligand from the list
 - [x] if a ligand is selected (clicked) move to the render page
@@ -24,7 +24,8 @@
         - [ ] update Atom (shape + color + 2d version)
         - [ ] unify color
     - [ ] reset settings
-- cache PDB locally
+    - [x] Atom info (display atom's info when clicked)
+- [ ] cache PDB locally
 - [ ] build a `kind of` engine to render a protein from PDB.
 
 ### Conclusion:

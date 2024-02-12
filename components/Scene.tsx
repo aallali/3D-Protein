@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, StyleSheet, Text, TouchableWithoutFeedback } from 'react-native';
+import { View, StyleSheet, Text, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import { GLView, ExpoWebGLRenderingContext } from 'expo-gl';
 import { Renderer } from 'expo-three';
 import { Dimensions } from 'react-native';
@@ -10,7 +10,7 @@ import Button from "../components/Button";
 import {
     reset_settings,
     rotate,
-    unify_color,
+    screenshotMolecule,
     update_atom_color,
     update_atom_shape,
     update_cylinder_color,
@@ -110,35 +110,38 @@ export default function ProtScene({ data }: any) {
                 <InfoBox atom={selectedObject as string} />
             </Vif>
 
+            <ScrollView>
+                <View style={{ margin: 10 }}>
+                    <Text style={styles.sectionTitle}>Rotate the molecule (Horizontal/Vertical):</Text>
+                    <View style={{ flexDirection: "row", marginBottom: 5, gap: 4 }}>
+                        <Button onClick={() => rotate(molecule, "H", 1)} title="H+" />
+                        <Button onClick={() => rotate(molecule, "H", -1)} title="H-" />
+                        <Button onClick={() => rotate(molecule, "V", 1)} title="V+" />
+                        <Button onClick={() => rotate(molecule, "V", -1)} title="V-" />
+                    </View>
 
-            <View style={{ margin: 10 }}>
-                <Text style={styles.sectionTitle}>Rotate the molecule (Horizontal/Vertical):</Text>
-                <View style={{ flexDirection: "row", marginBottom: 5, gap: 4 }}>
-                    <Button onClick={() => rotate(molecule, "H", 1)} title="H-Axis +" />
-                    <Button onClick={() => rotate(molecule, "H", -1)} title="H-Axis -" />
-                    <Button onClick={() => rotate(molecule, "V", 1)} title="V-Axis +" />
-                    <Button onClick={() => rotate(molecule, "V", -1)} title="V-Axis -" />
+                    <Text style={styles.sectionTitle}>Zoom In and Out:</Text>
+                    <View style={{ flexDirection: "row", marginBottom: 5, gap: 4 }}>
+                        <Button onClick={() => zoom(camera, -1)} title="Zoom +" />
+                        <Button onClick={() => zoom(camera, 1)} title="Zoom -" />
+                    </View>
+                    <Text style={styles.sectionTitle}>Take a screenshot and share it:</Text>
+                    <View style={{ flexDirection: "row", marginBottom: 5, gap: 4 }}>
+                        <Button onClick={() => screenshotMolecule()} title="Share" />
+                    </View>
+                    <Text style={styles.sectionTitle}>Customize Visualization Model:</Text>
+                    <View style={{ flexDirection: "row", flexWrap: "wrap", marginBottom: 5, gap: 4 }}>
+                        <Button title={"Connector Color"} onClick={() => update_cylinder_color()} />
+                        <Button title={"Connector Shape"} onClick={() => update_cylinder_shape()} />
+                        <Button title={"Atoms Color"} onClick={() => update_atom_color()} />
+                        <Button title={"Atoms Shape"} onClick={() => update_atom_shape()} />
+                    </View>
+                    <Text style={styles.sectionTitle}>Reet settings:</Text>
+                    <View style={{ flexDirection: "row", gap: 4 }}>
+                        <Button title={"Reset"} onClick={() => reset_settings()} />
+                    </View>
                 </View>
-
-                <Text style={styles.sectionTitle}>Zoom In and Out:</Text>
-                <View style={{ flexDirection: "row", marginBottom: 5, gap: 4 }}>
-                    <Button onClick={() => zoom(camera, -1)} title="Zoom +" />
-                    <Button onClick={() => zoom(camera, 1)} title="Zoom -" />
-                </View>
-
-                <Text style={styles.sectionTitle}>Customize Visualization Model:</Text>
-                <View style={{ flexDirection: "row", flexWrap: "wrap", marginBottom: 5, gap: 4 }}>
-                    <Button title={"Cylinder Color"} onClick={() => update_cylinder_color()} />
-                    <Button title={"Cylinder Shape"} onClick={() => update_cylinder_shape()} />
-                    <Button title={"unify Color"} onClick={() => unify_color()} />
-                    <Button title={"Atoms Color"} onClick={() => update_atom_color()} />
-                    <Button title={"Atoms Shape"} onClick={() => update_atom_shape()} />
-                </View>
-                <Text style={styles.sectionTitle}>Reet settings:</Text>
-                <View style={{ flexDirection: "row", gap: 4 }}>
-                    <Button title={"Reset"} onClick={() => reset_settings()} />
-                </View>
-            </View>
+            </ScrollView>
         </View>
     );
 }

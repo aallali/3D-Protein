@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View, Button, Alert } from 'react-native';
 import * as LocalAuthentication from 'expo-local-authentication';
 
@@ -6,27 +6,15 @@ export default function Home({ navigation }: any) {
 
     const authenticateWithFingerprint = async () => {
         try {
-            // check if an authentication system is enable in this device
-            const supported = await Promise.all([
-                LocalAuthentication.hasHardwareAsync(),
-                LocalAuthentication.isEnrolledAsync()
-            ])
-
-            if (supported) {
-                const result = await LocalAuthentication.authenticateAsync({
-                    promptMessage: 'Authenticate with your fingerprint',
-                });
-                if (result.success) {
-                    // Fingerprint authentication successful
-                    navigation.navigate('listing');
-                } else {
-                    // Fingerprint authentication failed
-                    Alert.alert('Authentication failed');
-                }
-            } else {
-                // Fingerprint authentication not supported
+            const result = await LocalAuthentication.authenticateAsync({
+                promptMessage: 'Authenticate with your fingerprint',
+            });
+            if (result.success) {
+                // Fingerprint authentication successful
                 navigation.navigate('listing');
-                Alert.alert('Fingerprint authentication not supported');
+            } else {
+                // Fingerprint authentication failed
+                Alert.alert('Authentication failed');
             }
         } catch (error) {
             console.error('Error authenticating with fingerprint:', error);
