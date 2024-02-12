@@ -1,12 +1,11 @@
-import React, { useRef } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, StyleSheet, Text, TouchableWithoutFeedback } from 'react-native';
 import { GLView, ExpoWebGLRenderingContext } from 'expo-gl';
 import { Renderer } from 'expo-three';
+import { Dimensions } from 'react-native';
 //@ts-ignore
 import * as THREE from "three";
-import createMolecule from '../utils/render/createMolecule';
-import createCamera from '../utils/render/createCamera';
-import createLight from '../utils/render/createLight';
+import { createMolecule, createCamera, createLight } from "../utils/render"
 import Button from "../components/Button";
 import {
     reset_settings,
@@ -18,17 +17,30 @@ import {
     update_cylinder_shape,
     zoom
 } from '../utils/render_controls';
-
+import InfoBox from './AtomInfo';
+import Vif from './Vif';
 
 
 export default function ProtScene({ data }: any) {
 
-    const camera = useRef();
-    const scene = useRef();
-    const molecule = useRef();
+    // init ThreeJs instances
+    const camera = useRef<THREE.camera>();
+    const scene = useRef<THREE.scene>();
+    const molecule = useRef<THREE.Group>();
+
+    // the width and height of the WebGL canvas
+    const [glWidth, setGLWidth] = useState(0);
+    const [glHeight, setGLHeight] = useState(0);
+    const [selectedObject, setSelectedObject] = useState<string | null>(null);
+    // mobile screen size
+    const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
     const onContextCreate = async (gl: ExpoWebGLRenderingContext) => {
         scene.current = new THREE.Scene();
+
+        // set width and height of the WebGL canvas
+        setGLWidth(gl.drawingBufferWidth);
+        setGLHeight(gl.drawingBufferHeight);
 
         // Molecule
         molecule.current = createMolecule(data.atoms, data.connectors)
@@ -43,26 +55,62 @@ export default function ProtScene({ data }: any) {
         scene.current.add(light);
 
         // Renderer
-        const renderer = new Renderer({ gl });
+        const renderer: THREE.WebGLRenderer = new Renderer({ gl });
         renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
 
         const animate = () => {
             requestAnimationFrame(animate);
             renderer.render(scene.current, camera.current);
             // rotate horizontally
-
-
             gl.endFrameEXP();
         }
         animate();
     }
 
+
+    const handleTouch = (event: any) => {
+        // offset of the mouse click position relative to the actual scene, not the entire screen
+        const { offsetX, offsetY } = event.nativeEvent;
+
+        // Map touch event coordinates to WebGL canvas size
+        const canvasX = (offsetX / screenWidth) * glWidth;
+        const canvasY = (offsetY / screenWidth) * glHeight;
+
+        // Normalize the mapped coordinates
+        const x = (canvasX / glWidth) * 2 - 1;
+        const y = -(canvasY / glHeight) * 2 + 1;
+
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera({ x, y }, camera.current);
+
+        const intersects = raycaster.intersectObjects(scene.current.children, true);
+
+        // Check if any objects were intersected
+        if (
+            intersects.length > 0 &&
+            intersects[0].object &&
+            intersects[0].object.name
+        ) {
+            setSelectedObject(intersects[0].object.name);
+        } else {
+            setSelectedObject(null);
+        }
+    };
+
     return (
         <View style={{ flex: 1, paddingTop: 10 }}>
-            <GLView
-                style={{ width: '100%', aspectRatio: 1, backgroundColor: "black" }}
-                onContextCreate={onContextCreate}
-            />
+
+            <TouchableWithoutFeedback onPress={handleTouch}>
+                <GLView
+                    style={{ width: '100%', aspectRatio: 1, backgroundColor: "black" }}
+                    onContextCreate={onContextCreate}
+                />
+            </TouchableWithoutFeedback>
+            <Vif c={!!selectedObject}>
+                <InfoBox atom={selectedObject as string} />
+            </Vif>
+
+
             <View style={{ margin: 10 }}>
                 <Text style={styles.sectionTitle}>Rotate the molecule (Horizontal/Vertical):</Text>
                 <View style={{ flexDirection: "row", marginBottom: 5, gap: 4 }}>
@@ -108,4 +156,5 @@ const styles = StyleSheet.create({
     touchContainer: {
         ...StyleSheet.absoluteFillObject,
     },
+
 });
