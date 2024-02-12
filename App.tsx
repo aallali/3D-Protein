@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Button, StyleSheet, Text, View, Image } from 'react-native';
 import Listing from './screens/Listing';
@@ -7,8 +8,6 @@ import Splash from './screens/Splash';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaView } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-import React, { useState } from 'react';
 
 const Stack = createNativeStackNavigator();
 
