@@ -58,7 +58,7 @@ export default function ProtScene({ data }: any) {
         // Renderer
         const renderer = new Renderer({ gl });
         renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
-        console.log('renderer', renderer.domElement)
+        
         const animate = () => {
             requestAnimationFrame(animate);
             renderer.render(scene.current, camera.current);
@@ -88,15 +88,6 @@ export default function ProtScene({ data }: any) {
 
         const intersects = raycaster.intersectObjects(scene.current.children, true);
 
-
-        // console.log('screen               ', screenWidth, screenWidth)
-
-        // console.log('gl                   ', glWidth, glHeight)
-        // console.log('page click           ', offsetX, offsetY)
-        // console.log('mobile click mapped  ', canvasX, canvasY)
-
-        // console.log('normalized           ', x, y)
-        // console.log( event.nativeEvent)
         // Check if any objects were intersected
         if (intersects.length > 0) {
             const intersectedObject = intersects[0].object;
