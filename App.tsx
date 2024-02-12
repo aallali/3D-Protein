@@ -12,26 +12,6 @@ import React, { useState } from 'react';
 
 const Stack = createNativeStackNavigator();
 
-const SCREENS = ["home", "ligands", "Render"]
-function NavigateButtons(props: any) {
-  console.log(props)
-  return (<View style={{ flexDirection: "row" }}>
-    <View style={{ marginRight: 10 }}>
-      <Button
-        onPress={() => false}
-        title="Back"
-        color="#000"
-      />
-    </View>
-    <View>
-      <Button
-        onPress={() => alert('This is a buttons!')}
-        title="Next"
-        color="#000"
-      />
-    </View>
-  </View>)
-}
 
 export default function App() {
   const [appLoaded, isLoaded] = useState(false)
