@@ -45,14 +45,18 @@ export default function Listing(props: any) {
         }
         data={data}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={[styles.ligandItem, styles.shadowProp]}
-            onPress={() => props.navigation.navigate('render', { item })}
-          >
-            <Text style={styles.ligandItemText}>{item}</Text>
-          </TouchableOpacity>
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', margin: 5 }} key={item}>
+            <TouchableOpacity
+              style={[styles.ligandItem, styles.shadowProp]}
+              onPress={() => props.navigation.navigate('render', { item })}
+            >
+              <Text style={styles.ligandItemText}>{item}</Text>
+            </TouchableOpacity>
+          </View>
+
         )}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item, index) => item}
+        numColumns={3}
       />
       <StatusBar style="auto" />
     </View>
@@ -63,6 +67,7 @@ export default function Listing(props: any) {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    backgroundColor: 'white'
   },
   ligandsList: {
     // marginTop: 20,
@@ -78,10 +83,10 @@ const styles = StyleSheet.create({
 
     borderRadius: 10,
     borderColor: "black",
-    backgroundColor: "#fff",
+    backgroundColor: "#dcdcdc",
   },
   shadowProp: {
-    elevation: 2,
+    elevation: 4,
   },
   ligandItemText: {
     width: "100%",
@@ -92,7 +97,7 @@ const styles = StyleSheet.create({
   },
   searchComponent: {
     height: 100,
-    backgroundColor: "#ededed",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
