@@ -5,8 +5,5 @@
  * @returns 
  */
 export default function Vif({ children, c }: { children: any, c: boolean }) {
-    if (c) {
-        return children
-    }
-    return <></>
+    return c ? children : null
 }

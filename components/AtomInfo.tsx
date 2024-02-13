@@ -24,13 +24,14 @@ const InfoBox = ({ atom }: Props) => {
 const styles = StyleSheet.create({
     infoBox: {
         position: 'absolute',
-        top: 20,
+        top: 34,
         right: 10,
         backgroundColor: 'white',
         padding: 10,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: 'gray',
+        zIndex: 999
     },
 });
 

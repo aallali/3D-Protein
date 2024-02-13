@@ -7,5 +7,10 @@ export type TAtom = {
 }
 export type TAtoms = TAtom[]
 
-export type TConnector =  number[]
+export type TConnector = number[]
 export type TConnectors = TConnector[]
+
+export interface TPDB {
+    atoms: TAtoms,
+    connectors: TConnectors
+}

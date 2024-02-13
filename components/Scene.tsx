@@ -6,35 +6,40 @@ import { Dimensions } from 'react-native';
 //@ts-ignore
 import * as THREE from "three";
 import { createMolecule, createCamera, createLight } from "../utils/render"
-import Button from "../components/Button";
-import {
-    reset_settings,
-    rotate,
-    screenshotMolecule,
-    update_atom_color,
-    update_atom_shape,
-    update_cylinder_color,
-    update_cylinder_shape,
-    zoom
-} from '../utils/render_controls';
 import InfoBox from './AtomInfo';
 import Vif from './Vif';
+import ViewShot, { CaptureOptions } from "react-native-view-shot";
+import { TPDB } from '../utils/render/types.type';
+import SceneControlls from './SceneControlls';
 
 
-export default function ProtScene({ data }: any) {
+interface Props {
+    data: TPDB;
+    ligand: string
+}
+
+
+export default function ProtScene({ data, ligand }: Props) {
 
     // init ThreeJs instances
     const camera = useRef<THREE.camera>();
     const scene = useRef<THREE.scene>();
     const molecule = useRef<THREE.Group>();
+    const glViewRef = useRef<any>(null);
+
+    // set options for view shot component
+    const viewShotOptions: CaptureOptions = {
+        fileName: `protein_${ligand}_`,
+        format: "jpg",
+        quality: 0.9
+    }
 
     // the width and height of the WebGL canvas
     const [glWidth, setGLWidth] = useState(0);
     const [glHeight, setGLHeight] = useState(0);
     const [selectedObject, setSelectedObject] = useState<string | null>(null);
     // mobile screen size
-    const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-
+    const { width: screenWidth } = Dimensions.get('window');
     const onContextCreate = async (gl: ExpoWebGLRenderingContext) => {
         scene.current = new THREE.Scene();
 
@@ -58,7 +63,8 @@ export default function ProtScene({ data }: any) {
         const renderer: THREE.WebGLRenderer = new Renderer({ gl });
         renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
 
-        const animate = () => {
+
+        const animate = async () => {
             requestAnimationFrame(animate);
             renderer.render(scene.current, camera.current);
             // rotate horizontally
@@ -71,9 +77,11 @@ export default function ProtScene({ data }: any) {
     const handleTouch = (event: any) => {
         // offset of the mouse click position relative to the actual scene, not the entire screen
         const { locationX, locationY } = event.nativeEvent;
+
         // Map touch event coordinates to WebGL canvas size
+        // NOTE: both divided by screenWidth for aspect ratio 1:1
         const canvasX = (locationX / screenWidth) * glWidth;
-        const canvasY = ((locationY) / screenWidth) * glHeight;
+        const canvasY = (locationY /  screenWidth) * glHeight;
 
         // Normalize the mapped coordinates
         const x = (canvasX / glWidth) * 2 - 1;
@@ -96,47 +104,28 @@ export default function ProtScene({ data }: any) {
         }
     };
 
+
     return (
         <View style={{ flex: 1 }}>
+            <ViewShot
+                ref={glViewRef}
+                options={viewShotOptions}
+                style={{
+                    backgroundColor: '#264348'
+                }}>
+                <Text style={styles.title}>Ligand: {ligand}</Text>
+                <Vif c={!!selectedObject}>
+                    <InfoBox atom={selectedObject as string} />
+                </Vif>
+                <TouchableWithoutFeedback onPress={handleTouch}>
+                    <GLView
+                        style={styles.GLView}
+                        onContextCreate={onContextCreate}
+                    />
+                </TouchableWithoutFeedback>
+            </ViewShot>
 
-            <TouchableWithoutFeedback onPress={handleTouch}>
-                <GLView
-                    style={styles.GLView}
-                    onContextCreate={onContextCreate}
-                />
-            </TouchableWithoutFeedback>
-            <Vif c={!!selectedObject}>
-                <InfoBox atom={selectedObject as string} />
-            </Vif>
-
-            <ScrollView>
-                <View style={{ margin: 10 }}>
-                    <Text style={styles.sectionTitle}>Rotate/Zoom the molecule (Horizontal/Vertical):</Text>
-                    <View style={{ flexDirection: "row", marginBottom: 5, gap: 4 }}>
-                        <Button onClick={() => rotate(molecule, "H", 1)} title="H+" />
-                        <Button onClick={() => rotate(molecule, "H", -1)} title="H-" />
-                        <Button onClick={() => rotate(molecule, "V", 1)} title="V+" />
-                        <Button onClick={() => rotate(molecule, "V", -1)} title="V-" />
-                        <Button onClick={() => zoom(camera, -1)} title="Zoom +" />
-                        <Button onClick={() => zoom(camera, 1)} title="Zoom -" />
-                    </View>
-                    <Text style={styles.sectionTitle}>Take a screenshot and share it:</Text>
-                    <View style={{ flexDirection: "row", marginBottom: 5, gap: 4 }}>
-                        <Button onClick={() => screenshotMolecule()} title="Share" />
-                    </View>
-                    <Text style={styles.sectionTitle}>Customize Visualization Model:</Text>
-                    <View style={{ flexDirection: "row", flexWrap: "wrap", marginBottom: 5, gap: 4 }}>
-                        <Button title={"Connector Color"} onClick={() => update_cylinder_color()} />
-                        <Button title={"Connector Shape"} onClick={() => update_cylinder_shape()} />
-                        <Button title={"Atoms Color"} onClick={() => update_atom_color()} />
-                        <Button title={"Atoms Shape"} onClick={() => update_atom_shape()} />
-                    </View>
-                    <Text style={styles.sectionTitle}>Reet settings:</Text>
-                    <View style={{ flexDirection: "row", gap: 4 }}>
-                        <Button title={"Reset"} onClick={() => reset_settings()} />
-                    </View>
-                </View>
-            </ScrollView>
+            <SceneControlls refs={{ molecule, camera, glViewRef }} />
         </View>
     );
 }
@@ -148,6 +137,12 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+    },
+    title: {
+        alignSelf: 'center',
+        fontSize: 20,
+        color: 'white',
+        fontWeight: 'bold'
     },
     glContainer: {
         flex: 1,
