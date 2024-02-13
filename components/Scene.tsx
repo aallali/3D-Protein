@@ -70,11 +70,10 @@ export default function ProtScene({ data }: any) {
 
     const handleTouch = (event: any) => {
         // offset of the mouse click position relative to the actual scene, not the entire screen
-        const { offsetX, offsetY } = event.nativeEvent;
-
+        const { locationX, locationY } = event.nativeEvent;
         // Map touch event coordinates to WebGL canvas size
-        const canvasX = (offsetX / screenWidth) * glWidth;
-        const canvasY = (offsetY / screenWidth) * glHeight;
+        const canvasX = (locationX / screenWidth) * glWidth;
+        const canvasY = ((locationY) / screenWidth) * glHeight;
 
         // Normalize the mapped coordinates
         const x = (canvasX / glWidth) * 2 - 1;
