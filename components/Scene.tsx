@@ -39,8 +39,7 @@ export default function ProtScene({ data, ligand }: Props) {
     const [glHeight, setGLHeight] = useState(0);
     const [selectedObject, setSelectedObject] = useState<string | null>(null);
     // mobile screen size
-    const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-
+    const { width: screenWidth } = Dimensions.get('window');
     const onContextCreate = async (gl: ExpoWebGLRenderingContext) => {
         scene.current = new THREE.Scene();
 
@@ -64,7 +63,8 @@ export default function ProtScene({ data, ligand }: Props) {
         const renderer: THREE.WebGLRenderer = new Renderer({ gl });
         renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
 
-        const animate = () => {
+
+        const animate = async () => {
             requestAnimationFrame(animate);
             renderer.render(scene.current, camera.current);
             // rotate horizontally
@@ -77,9 +77,11 @@ export default function ProtScene({ data, ligand }: Props) {
     const handleTouch = (event: any) => {
         // offset of the mouse click position relative to the actual scene, not the entire screen
         const { locationX, locationY } = event.nativeEvent;
+
         // Map touch event coordinates to WebGL canvas size
+        // NOTE: both divided by screenWidth for aspect ratio 1:1
         const canvasX = (locationX / screenWidth) * glWidth;
-        const canvasY = ((locationY) / screenWidth) * glHeight;
+        const canvasY = (locationY /  screenWidth) * glHeight;
 
         // Normalize the mapped coordinates
         const x = (canvasX / glWidth) * 2 - 1;
