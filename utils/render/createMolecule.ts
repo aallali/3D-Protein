@@ -1,7 +1,7 @@
 //@ts-ignore
 import * as THREE from "three";
 import createAtom from "./createAtom";
-import { TAtoms, TConnectors } from "./types.type";
+import { AtomShape, Colors, TAtoms, TConnectors } from "./types.type";
 import createConnector from "./createCylinder";
 
 // Function to calculate the center of the group of spheres
@@ -28,16 +28,26 @@ function calculateGroupCenter(atoms: TAtoms) {
 }
 
 
-export default function createMolecule(atoms: TAtoms, connectors: TConnectors) {
+export default function createMolecule(
+    atoms: TAtoms,
+    connectors: TConnectors,
+    options: {
+        atomColor: Colors,
+        atomShape: AtomShape,
+        connectorColor: Colors
+    }) {
     const molecule = new THREE.Group();
     // Calculate the center of the group of spheres
     const groupCenter = calculateGroupCenter(atoms);
 
-    atoms.forEach((ato) => {
-        const atom = createAtom(ato)
-        atom.position.sub(groupCenter);
-        molecule.add(atom);
-    })
+    // if the color === "none" we consider that as transparent 
+    // which mean no Mesh to render
+    if (options.atomColor !== Colors.None)
+        atoms.forEach((ato) => {
+            const atom = createAtom(ato, options.atomShape, options.atomColor)
+            atom.position.sub(groupCenter);
+            molecule.add(atom);
+        })  
 
 
     // ISSUE:
@@ -55,30 +65,33 @@ export default function createMolecule(atoms: TAtoms, connectors: TConnectors) {
     // check if the the Atom(connector) exists
     // then loop through atoms(target) and create connection with valid ones
 
-    connectors.forEach((c, i) => {
-        const atom = atoms[c[0] - 1]
-        if (atom) {
-            let atomAPos = new THREE.Vector3(
-                atoms[c[0] - 1].x,
-                atoms[c[0] - 1].y,
-                atoms[c[0] - 1].z
-            )
-            for (let i = 1; i < c.length; i++) {
-                const atom = atoms[c[i] - 1]
-                if (atom) {
-                    let atomBPos = new THREE.Vector3(
-                        atom.x,
-                        atom.y,
-                        atom.z
-                    )
+    // if the color === "none" we consider that as transparent 
+    // which mean no connector to render
+    if (options.connectorColor !== Colors.None)
+        connectors.forEach((c, i) => {
+            const atom = atoms[c[0] - 1]
+            if (atom) {
+                let atomAPos = new THREE.Vector3(
+                    atoms[c[0] - 1].x,
+                    atoms[c[0] - 1].y,
+                    atoms[c[0] - 1].z
+                )
+                for (let i = 1; i < c.length; i++) {
+                    const atom = atoms[c[i] - 1]
+                    if (atom) {
+                        let atomBPos = new THREE.Vector3(
+                            atom.x,
+                            atom.y,
+                            atom.z
+                        )
 
-                    const connector = createConnector(atomAPos, atomBPos, 'white')
-                    connector.position.sub(groupCenter);
-                    molecule.add(connector)
+                        const connector = createConnector(atomAPos, atomBPos, options.connectorColor)
+                        connector.position.sub(groupCenter);
+                        molecule.add(connector)
+                    }
                 }
             }
-        }
-    })
+        })
 
     return molecule
 }

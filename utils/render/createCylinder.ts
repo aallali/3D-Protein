@@ -1,8 +1,9 @@
 //@ts-ignore
 import * as THREE from "three";
+import { Colors } from "./types.type";
 
 
-export default function createConnector(atomA: any, atomB: any, color: any) {
+export default function createConnector(atomA: any, atomB: any, color: Colors) {
 
     const height = atomA.distanceTo(atomB);
     const centerPosition = new THREE.Vector3(
@@ -16,7 +17,10 @@ export default function createConnector(atomA: any, atomB: any, color: any) {
     return createCylinder(height, color, centerPosition, direction)
 }
 
-function createCylinder(height: number, color: string, centerPosition: any, direction: any) {
+function createCylinder(height: number, color: Colors, centerPosition: any, direction: any): THREE.Mesh {
+
+    if (color === Colors.Default)
+        color = Colors.White
 
     const radius = .1;
     const geometry = new THREE.CylinderGeometry(radius, radius, height, 32);
