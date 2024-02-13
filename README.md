@@ -25,7 +25,6 @@
         - [ ] unify color
     - [ ] reset settings
     - [x] Atom info (display atom's info when clicked)
-- [ ] cache PDB locally
 - [ ] build a `kind of` engine to render a protein from PDB.
 
 ### Conclusion:
@@ -36,8 +35,5 @@ there will be 4 screens (pages):
 3. Render screen 
 
 <div style="display: flex;">
-    <img src="./assets/screenshot-splash.jpeg" alt="splash" width="240" height="500">
-    <img src="./assets/screenshot-home.jpeg" alt="home" width="240" height="500">
-    <img src="./assets/screenshot-listing.jpeg" alt="listing" width="240" height="500">
-    <img src="./assets/screenshot-render-2.gif" alt="render" width="240" height="500">
+    <img src="./assets/ux.gif" alt="render" width="260" >
 </div>
