@@ -6,20 +6,10 @@ import { Dimensions } from 'react-native';
 //@ts-ignore
 import * as THREE from "three";
 import { createMolecule, createCamera, createLight } from "../utils/render"
-import Button from "../components/Button";
-import {
-    reset_settings,
-    rotate,
-    screenshotMolecule,
-    update_atom_color,
-    update_atom_shape,
-    update_cylinder_color,
-    update_cylinder_shape,
-    zoom
-} from '../utils/render_controls';
 import InfoBox from './AtomInfo';
 import Vif from './Vif';
 import { TPDB } from '../utils/render/types.type';
+import SceneControlls from './SceneControlls';
 
 
 interface Props {
@@ -116,34 +106,7 @@ export default function ProtScene({ data, ligand }: Props) {
                 <InfoBox atom={selectedObject as string} />
             </Vif>
 
-            <ScrollView>
-                <View style={{ margin: 10 }}>
-                    <Text style={styles.sectionTitle}>Rotate/Zoom the molecule (Horizontal/Vertical):</Text>
-                    <View style={{ flexDirection: "row", marginBottom: 5, gap: 4 }}>
-                        <Button onClick={() => rotate(molecule, "H", 1)} title="H+" />
-                        <Button onClick={() => rotate(molecule, "H", -1)} title="H-" />
-                        <Button onClick={() => rotate(molecule, "V", 1)} title="V+" />
-                        <Button onClick={() => rotate(molecule, "V", -1)} title="V-" />
-                        <Button onClick={() => zoom(camera, -1)} title="Zoom +" />
-                        <Button onClick={() => zoom(camera, 1)} title="Zoom -" />
-                    </View>
-                    <Text style={styles.sectionTitle}>Take a screenshot and share it:</Text>
-                    <View style={{ flexDirection: "row", marginBottom: 5, gap: 4 }}>
-                        <Button onClick={() => screenshotMolecule()} title="Share" />
-                    </View>
-                    <Text style={styles.sectionTitle}>Customize Visualization Model:</Text>
-                    <View style={{ flexDirection: "row", flexWrap: "wrap", marginBottom: 5, gap: 4 }}>
-                        <Button title={"Connector Color"} onClick={() => update_cylinder_color()} />
-                        <Button title={"Connector Shape"} onClick={() => update_cylinder_shape()} />
-                        <Button title={"Atoms Color"} onClick={() => update_atom_color()} />
-                        <Button title={"Atoms Shape"} onClick={() => update_atom_shape()} />
-                    </View>
-                    <Text style={styles.sectionTitle}>Reet settings:</Text>
-                    <View style={{ flexDirection: "row", gap: 4 }}>
-                        <Button title={"Reset"} onClick={() => reset_settings()} />
-                    </View>
-                </View>
-            </ScrollView>
+            <SceneControlls refs={{ molecule, camera, glViewRef }} />
         </View>
     );
 }
