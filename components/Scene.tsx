@@ -8,6 +8,7 @@ import * as THREE from "three";
 import { createMolecule, createCamera, createLight } from "../utils/render"
 import InfoBox from './AtomInfo';
 import Vif from './Vif';
+import ViewShot, { CaptureOptions } from "react-native-view-shot";
 import { TPDB } from '../utils/render/types.type';
 import SceneControlls from './SceneControlls';
 
@@ -24,6 +25,14 @@ export default function ProtScene({ data, ligand }: Props) {
     const camera = useRef<THREE.camera>();
     const scene = useRef<THREE.scene>();
     const molecule = useRef<THREE.Group>();
+    const glViewRef = useRef<any>(null);
+
+    // set options for view shot component
+    const viewShotOptions: CaptureOptions = {
+        fileName: `protein_${ligand}_`,
+        format: "jpg",
+        quality: 0.9
+    }
 
     // the width and height of the WebGL canvas
     const [glWidth, setGLWidth] = useState(0);
@@ -93,18 +102,26 @@ export default function ProtScene({ data, ligand }: Props) {
         }
     };
 
+
     return (
         <View style={{ flex: 1 }}>
-
-            <TouchableWithoutFeedback onPress={handleTouch}>
-                <GLView
-                    style={styles.GLView}
-                    onContextCreate={onContextCreate}
-                />
-            </TouchableWithoutFeedback>
-            <Vif c={!!selectedObject}>
-                <InfoBox atom={selectedObject as string} />
-            </Vif>
+            <ViewShot
+                ref={glViewRef}
+                options={viewShotOptions}
+                style={{
+                    backgroundColor: '#264348'
+                }}>
+                <Text style={styles.title}>Ligand: {ligand}</Text>
+                <Vif c={!!selectedObject}>
+                    <InfoBox atom={selectedObject as string} />
+                </Vif>
+                <TouchableWithoutFeedback onPress={handleTouch}>
+                    <GLView
+                        style={styles.GLView}
+                        onContextCreate={onContextCreate}
+                    />
+                </TouchableWithoutFeedback>
+            </ViewShot>
 
             <SceneControlls refs={{ molecule, camera, glViewRef }} />
         </View>
@@ -118,6 +135,12 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+    },
+    title: {
+        alignSelf: 'center',
+        fontSize: 20,
+        color: 'white',
+        fontWeight: 'bold'
     },
     glContainer: {
         flex: 1,
