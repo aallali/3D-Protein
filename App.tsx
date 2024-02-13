@@ -20,11 +20,11 @@ export default function App() {
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar backgroundColor="#00C4FF" hidden={false} />
 
-      <Vif c={appLoaded}>
+      <Vif c={!appLoaded}>
         <Splash setBiometricSupport={setBiometricSupport} goHomeScreen={isLoaded} />
       </Vif>
 
-      <Vif c={!appLoaded}>
+      <Vif c={appLoaded}>
         <NavigationContainer>
           <Stack.Navigator
             initialRouteName={`${bioMetricSupport ? 'home' : 'listing'}`}
