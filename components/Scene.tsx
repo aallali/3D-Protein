@@ -19,9 +19,16 @@ import {
 } from '../utils/render_controls';
 import InfoBox from './AtomInfo';
 import Vif from './Vif';
+import { TPDB } from '../utils/render/types.type';
 
 
-export default function ProtScene({ data }: any) {
+interface Props {
+    data: TPDB;
+    ligand: string
+}
+
+
+export default function ProtScene({ data, ligand }: Props) {
 
     // init ThreeJs instances
     const camera = useRef<THREE.camera>();
