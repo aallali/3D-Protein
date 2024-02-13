@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, Text, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import { GLView, ExpoWebGLRenderingContext } from 'expo-gl';
 import { Renderer } from 'expo-three';
@@ -9,7 +9,7 @@ import { createMolecule, createCamera, createLight } from "../utils/render"
 import InfoBox from './AtomInfo';
 import Vif from './Vif';
 import ViewShot, { CaptureOptions } from "react-native-view-shot";
-import { TPDB } from '../utils/render/types.type';
+import { AtomShape, Colors, TPDB } from '../utils/render/types.type';
 import SceneControlls from './SceneControlls';
 
 
@@ -25,7 +25,28 @@ export default function ProtScene({ data, ligand }: Props) {
     const camera = useRef<THREE.camera>();
     const scene = useRef<THREE.scene>();
     const molecule = useRef<THREE.Group>();
+    const [glViewKey, updateGlVKey] = useState<number>(0);
     const glViewRef = useRef<any>(null);
+
+    // the width and height of the WebGL canvas
+    const [glWidth, setGLWidth] = useState(0);
+    const [glHeight, setGLHeight] = useState(0);
+    const [selectedObject, setSelectedObject] = useState<string | null>(null);
+
+    // Shapes && colors updater
+    const [styleOptions, updateStyleOptions] = useState({
+        atomColorIdx: 0,
+        atomShapeIdx: 0,
+        connectorColorIdx: 0,
+        colorsLength: Object.values(Colors).length,
+        atomShapeLength: Object.values(AtomShape).length,
+    })
+
+    // Track if the component mounted or not
+    const isMountingRef = useRef(false);
+
+    // mobile screen size
+    const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
     // set options for view shot component
     const viewShotOptions: CaptureOptions = {
@@ -34,12 +55,19 @@ export default function ProtScene({ data, ligand }: Props) {
         quality: 0.9
     }
 
-    // the width and height of the WebGL canvas
-    const [glWidth, setGLWidth] = useState(0);
-    const [glHeight, setGLHeight] = useState(0);
-    const [selectedObject, setSelectedObject] = useState<string | null>(null);
-    // mobile screen size
-    const { width: screenWidth } = Dimensions.get('window');
+
+    useEffect(() => {
+        // avoid ThreeJs rendering upon the first component render
+        if (isMountingRef.current) {
+            updateGlVKey(prev => prev + 1)
+        } else {
+            isMountingRef.current = true
+        }
+    }, [
+        styleOptions,
+    ])
+
+
     const onContextCreate = async (gl: ExpoWebGLRenderingContext) => {
         scene.current = new THREE.Scene();
 
@@ -48,7 +76,11 @@ export default function ProtScene({ data, ligand }: Props) {
         setGLHeight(gl.drawingBufferHeight);
 
         // Molecule
-        molecule.current = createMolecule(data.atoms, data.connectors)
+        molecule.current = createMolecule(data.atoms, data.connectors, {
+            atomColor: Object.values(Colors)[styleOptions.atomColorIdx],
+            atomShape: Object.values(AtomShape)[styleOptions.atomShapeIdx],
+            connectorColor: Object.values(Colors)[styleOptions.connectorColorIdx],
+        })
         scene.current.add(molecule.current);
 
         // Camera
@@ -69,7 +101,9 @@ export default function ProtScene({ data, ligand }: Props) {
             renderer.render(scene.current, camera.current);
             // rotate horizontally
             gl.endFrameEXP();
+
         }
+
         animate();
     }
 
@@ -80,8 +114,8 @@ export default function ProtScene({ data, ligand }: Props) {
 
         // Map touch event coordinates to WebGL canvas size
         // NOTE: both divided by screenWidth for aspect ratio 1:1
-        const canvasX = (locationX / screenWidth) * glWidth;
-        const canvasY = (locationY /  screenWidth) * glHeight;
+        const canvasX = (locationX / SCREEN_WIDTH) * glWidth;
+        const canvasY = (locationY / SCREEN_WIDTH) * glHeight;
 
         // Normalize the mapped coordinates
         const x = (canvasX / glWidth) * 2 - 1;
@@ -121,11 +155,12 @@ export default function ProtScene({ data, ligand }: Props) {
                     <GLView
                         style={styles.GLView}
                         onContextCreate={onContextCreate}
+                        key={glViewKey}
                     />
                 </TouchableWithoutFeedback>
             </ViewShot>
 
-            <SceneControlls refs={{ molecule, camera, glViewRef }} />
+            <SceneControlls refs={{ molecule, camera, glViewRef, styleUpdateDispatcher: updateStyleOptions }} />
         </View>
     );
 }
