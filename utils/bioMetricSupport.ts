@@ -6,5 +6,6 @@ export default async function isBioMetricAvailable() {
         LocalAuthentication.hasHardwareAsync(),
         LocalAuthentication.isEnrolledAsync()
     ])
+
     return !supported.includes(false)
 }
