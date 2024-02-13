@@ -2,13 +2,8 @@ import React from 'react';
 import { View, StyleSheet, Text, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import Button from "../components/Button";
 import {
-    reset_settings,
     rotate,
     screenshotMolecule,
-    update_atom_color,
-    update_atom_shape,
-    update_cylinder_color,
-    update_cylinder_shape,
     zoom
 } from '../utils/render_controls';
 
