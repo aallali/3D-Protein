@@ -26,8 +26,7 @@ export default function Render() {
   return (
     <View style={styles.container}>
       <IsReadyPDB ligand={ligand} loader={loading} loadError={loadError}>
-
-        <Text>Ligand: {ligand}</Text>
+        {/* <Text>Ligand: {ligand}</Text> */}
         <ProtScene data={pdb} />
 
       </IsReadyPDB>
