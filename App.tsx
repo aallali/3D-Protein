@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Listing from './screens/Listing';
 import Render from './screens/Render';
 import Home from './screens/Home';
@@ -16,6 +16,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const [appLoaded, isLoaded] = useState(false)
   const [bioMetricSupport, setBiometricSupport] = useState(false)
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar backgroundColor="#00C4FF" hidden={false} />
