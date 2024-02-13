@@ -2,10 +2,13 @@
 import * as THREE from "three";
 import { TAtom } from "./types.type";
 import colors from '../../constants/colors.json';
+import { normalizeAtomSymbole } from "../atomSymboleNormalizer";
 
 
 export default function createAtom(atom: TAtom) {
-    const jmol = colors[atom.element as keyof typeof colors].jmol
+
+    const atomSymbole = normalizeAtomSymbole(atom.element)
+    const jmol = colors[atomSymbole as keyof typeof colors].jmol
     const atomColor = parseInt(jmol, 16);
 
     const sphereGeometry = new THREE.SphereGeometry(0.4);

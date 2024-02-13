@@ -70,11 +70,10 @@ export default function ProtScene({ data }: any) {
 
     const handleTouch = (event: any) => {
         // offset of the mouse click position relative to the actual scene, not the entire screen
-        const { offsetX, offsetY } = event.nativeEvent;
-
+        const { locationX, locationY } = event.nativeEvent;
         // Map touch event coordinates to WebGL canvas size
-        const canvasX = (offsetX / screenWidth) * glWidth;
-        const canvasY = (offsetY / screenWidth) * glHeight;
+        const canvasX = (locationX / screenWidth) * glWidth;
+        const canvasY = ((locationY) / screenWidth) * glHeight;
 
         // Normalize the mapped coordinates
         const x = (canvasX / glWidth) * 2 - 1;
@@ -98,11 +97,11 @@ export default function ProtScene({ data }: any) {
     };
 
     return (
-        <View style={{ flex: 1, paddingTop: 10 }}>
+        <View style={{ flex: 1 }}>
 
             <TouchableWithoutFeedback onPress={handleTouch}>
                 <GLView
-                    style={{ width: '100%', aspectRatio: 1, backgroundColor: "black" }}
+                    style={styles.GLView}
                     onContextCreate={onContextCreate}
                 />
             </TouchableWithoutFeedback>
@@ -112,16 +111,12 @@ export default function ProtScene({ data }: any) {
 
             <ScrollView>
                 <View style={{ margin: 10 }}>
-                    <Text style={styles.sectionTitle}>Rotate the molecule (Horizontal/Vertical):</Text>
+                    <Text style={styles.sectionTitle}>Rotate/Zoom the molecule (Horizontal/Vertical):</Text>
                     <View style={{ flexDirection: "row", marginBottom: 5, gap: 4 }}>
                         <Button onClick={() => rotate(molecule, "H", 1)} title="H+" />
                         <Button onClick={() => rotate(molecule, "H", -1)} title="H-" />
                         <Button onClick={() => rotate(molecule, "V", 1)} title="V+" />
                         <Button onClick={() => rotate(molecule, "V", -1)} title="V-" />
-                    </View>
-
-                    <Text style={styles.sectionTitle}>Zoom In and Out:</Text>
-                    <View style={{ flexDirection: "row", marginBottom: 5, gap: 4 }}>
                         <Button onClick={() => zoom(camera, -1)} title="Zoom +" />
                         <Button onClick={() => zoom(camera, 1)} title="Zoom -" />
                     </View>
@@ -148,7 +143,8 @@ export default function ProtScene({ data }: any) {
 
 const styles = StyleSheet.create({
     sectionTitle: {
-        fontWeight: "bold"
+        fontWeight: "bold",
+        fontSize: 15
     },
     container: {
         flex: 1,
@@ -159,5 +155,9 @@ const styles = StyleSheet.create({
     touchContainer: {
         ...StyleSheet.absoluteFillObject,
     },
-
+    GLView: {
+        width: '100%',
+        aspectRatio: 1,
+        backgroundColor: "#264348",
+    }
 });
