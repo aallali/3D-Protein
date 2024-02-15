@@ -4,6 +4,7 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
+    "start:tunnel": "expo start --tunnel",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
@@ -14,6 +15,7 @@
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.18",
     "@react-navigation/stack": "^6.3.20",
+    "@expo/ngrok": "^4.1.0", 
     "expo": "~50.0.6",
     "expo-gl": "~13.6.0",
     "expo-local-authentication": "~13.8.0",
